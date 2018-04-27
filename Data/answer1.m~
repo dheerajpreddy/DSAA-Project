@@ -1,0 +1,3 @@
+load('DATA_01_TYPE01.mat');
+
+bandpass(x,[100 200],125)
