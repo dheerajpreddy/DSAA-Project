@@ -15,7 +15,8 @@ x = (x1+x2);
 % Filtering noise. Only allowing 0.5 Hz to 4 Hz
 [b,a]=butter(1,[0.5 4]/(125/2),'bandpass');
 out = filter(b, a, x);
-
+figure;
+plot(out);
 % figure;
 % plot(F, fftshift(abs(fft(out))));
 
@@ -43,4 +44,5 @@ for i=6:length(sInd)
     est_bpm2(i) = est_bpm2(i)/5;
 end
 diff = est_bpm2 - BPM0;
+figure;
 plot(diff);
