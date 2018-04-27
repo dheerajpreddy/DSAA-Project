@@ -4,7 +4,7 @@ load('DATA_01_TYPE01.mat');
 x1 = sig(2, :);
 x2 = sig(3, :);
 % Adding both channels of ppg
-x = x1 + x2;
+x = (x1+x2);
 
 % Fs = 125;
 % L = 37937;
@@ -19,4 +19,28 @@ out = filter(b, a, x);
 % figure;
 % plot(F, fftshift(abs(fft(out))));
 
+s = abs(spectrogram(out, 1000, 750,[] , 125));
+sMax = max(s);
 
+sInd = zeros(length(sMax), 1);
+
+for i=1:length(sMax)
+    for j=1:length(s(:,i))
+        if(s(j,i) == sMax(i))
+            sInd(i) = j;
+        end
+    end
+end
+
+est_bpm = (513/65) * sInd - 10;
+est_bpm2 = est_bpm;
+alpha = 0.9;
+for i=6:length(sInd)
+%     for j=1:i
+%         est_bpm2(i) = (alpha^j) * est_bpm2(i-j+1);
+%     end
+    est_bpm2(i) = est_bpm(i-1) + est_bpm(i-2) + est_bpm(i-3) + est_bpm(i-4) + est_bpm(i-5);
+    est_bpm2(i) = est_bpm2(i)/5;
+end
+diff = est_bpm2 - BPM0;
+plot(diff);
