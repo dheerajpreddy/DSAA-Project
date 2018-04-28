@@ -1,4 +1,5 @@
 function [] = estimator(trainDir, testDir, outDir)
+cd TestDir;
     
     files = dir(fullfile(testDir, '*.mat'));
     
@@ -43,16 +44,17 @@ function [] = estimator(trainDir, testDir, outDir)
                 end
             end
         end
-
+        
         est_bpm = (513/65) * sInd - 10;
         est_bpm2 = est_bpm;
-        alpha = 0.9;
         for i=6:length(sInd)
             est_bpm2(i) = est_bpm(i-1) + est_bpm(i-2) + est_bpm(i-3) + est_bpm(i-4) + est_bpm(i-5);
             est_bpm2(i) = est_bpm2(i)/5;
         end
         pred = est_bpm2(1:125);
-
-        save(strcat('output_team_06_', files(fileIndex).name), 'pred');
+        if(outDir(length(outDir)) ~= '/')
+            outDir(length(outDir)+1) = '/';
+        end
+        save(strcat(outDir, 'output_team_06_', files(fileIndex).name), 'pred');
     end
 end
